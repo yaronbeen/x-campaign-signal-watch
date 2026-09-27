@@ -1,10 +1,26 @@
 # X Post Window Comparator
 
-A small evidence-backed CLI for comparing observed public X post activity across two user-selected date windows. It is a bounded URL-sample comparison, not continuous campaign monitoring, profile prospecting, or a causal lift measurement.
+**Did public X post activity differ before and after an announcement?** X Post Window Comparator organizes returned counters for a user-selected set of public post URLs into two explicit date windows. It helps a marketer make a quick descriptive comparison and decide which posts to inspect further. It does not continuously monitor a campaign or prove that the campaign caused a change.
 
 ## Use cases and architecture
 
 Compare a bounded set of up to 20 public post URLs per synchronous call around an announcement or campaign change. Flow: `explicit --live + CSV post URLs -> Bright Data X Posts dataset -> two explicit date windows -> descriptive totals/deltas -> JSON/CSV`. Fixture JSON runs offline. Python 3.10+ standard library is the only runtime requirement.
+
+## Example: two windows to a follow-up question
+
+An agency has saved public X post URLs from the week before a product announcement and the week after. It supplies the URLs and date boundaries, then reviews the returned post counts and available likes, replies, and reposts by period.
+
+Synthetic illustration: the report shows 3 before-window posts and 5 after-window posts, with returned likes totaling 120 before and 180 after. That can prompt “Which post(s) account for the difference, and what else changed in distribution?” It cannot support “the announcement caused a 50% lift”: audience, exposure, timing, collection coverage, and other conditions are not controlled. Missing counters stay unknown, and timestamps outside either window are excluded.
+
+The bundled offline example runs with explicit windows:
+
+```bash
+python3 watch.py sample_posts.json campaign_comparison.json \\
+  --before-start 2026-09-10 --before-end 2026-09-14 \\
+  --after-start 2026-09-24 --after-end 2026-09-28
+```
+
+JSON includes the two period summaries, counter coverage, deltas, observations, windows, and caveat. CSV is evidence rows only; it does not include aggregate deltas.
 
 ## Setup
 
@@ -65,5 +81,17 @@ python3 -m pytest -q
 ```
 
 Offline coverage includes date-window boundaries, UTC and naive timestamps, malformed dates/counters, before/after aggregation and deltas, explicit live opt-in, mocked request shape, formula-safe CSV serialization, malformed records, and missing URLs. Sample records are illustrative.
+
+## FAQ
+
+**Does it monitor X automatically?** No. You provide a fixed set of URLs and date windows for a one-time comparison.
+
+**Does an increase prove campaign lift?** No. These are descriptive public-post counts and counters, not controlled ad delivery or attribution data.
+
+**What if metrics or timestamps are missing?** Coverage is reported for counters; missing metrics remain unknown. Records without usable timestamps are counted as unplaced and excluded from the window totals.
+
+**Can it search X by keyword?** No. This demo collects supplied post URLs, up to 20 per synchronous request.
+
+**Can I try it without an API key?** Yes. The fixture example and dry-run are offline. Live collection requires Bright Data access and may incur charges.
 
 MIT License.
