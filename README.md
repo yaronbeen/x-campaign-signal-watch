@@ -1,4 +1,6 @@
-# X Post Window Comparator
+# Bright Data X Post Window Comparator
+
+**Repository:** [bright-data-x-campaign-signal-watch](https://github.com/yaronbeen/bright-data-x-campaign-signal-watch) · **Data provider:** [Bright Data](https://brightdata.com/)
 
 **Did public X post activity differ before and after an announcement?** X Post Window Comparator organizes returned counters for a user-selected set of public post URLs into two explicit date windows. It helps a marketer make a quick descriptive comparison and decide which posts to inspect further. It does not continuously monitor a campaign or prove that the campaign caused a change.
 
